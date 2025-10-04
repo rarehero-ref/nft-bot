@@ -2,435 +2,291 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>NFT Gift Market</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script async src="https://telegram.org/js/telegram-widget.js?22"></script>
+    
     <style>
+        :root {
+            --bg-start: #1a202c;
+            --bg-end: #0c0f14;
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --text-main: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --panel-bg: rgba(45, 55, 72, 0.7);
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(180deg, #1a202c 0%, #0c0f14 100%);
-            color: #e2e8f0;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            color: var(--text-main);
+            overscroll-behavior: none;
         }
-        .page {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-            transform: scale(0.98);
-        }
-        .page.active {
-            display: block;
-            opacity: 1;
-            transform: scale(1);
-        }
-        .nav-btn {
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .nav-btn.active {
-            background-color: #4f46e5;
-            color: white;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal.show {
-            display: flex;
-        }
-        .modal-content {
-            animation: slideUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        @keyframes slideUp {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .page { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        .page.active { display: block; opacity: 1; }
+        .nav-btn.active { background-color: var(--primary); color: white; }
+        
         .loader-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, #1a202c 0%, #0c0f14 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 1;
-            transition: opacity 2s ease-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+            opacity: 1; transition: opacity 0.5s ease-out; pointer-events: none;
         }
         .loader {
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-left-color: #6366f1;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
+            border: 4px solid rgba(255, 255, 255, 0.2); border-left-color: var(--primary-light);
+            border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .animated-header {
-            position: relative;
-            height: 80px;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 12px;
-        }
-        .animated-header .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background-size: 1000px 100px;
-        }
-        .animated-header .wave.wave1 {
-            animation: animate 30s linear infinite;
-            z-index: 10;
-            opacity: 0.7;
-            bottom: 0px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250.4 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%234f46e5'/%3E%3C/svg%3E");
-        }
-        .animated-header .wave.wave2 {
-            animation: animate2 15s linear infinite;
-            z-index: 9;
-            opacity: 0.5;
-            bottom: 10px;
-             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250.4 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%236366f1'/%3E%3C/svg%3E");
-        }
-        @keyframes animate {
-            0% { background-position-x: 0; }
-            100% { background-position-x: 1000px; }
-        }
-        @keyframes animate2 {
-            0% { background-position-x: 0; }
-            100% { background-position-x: -1000px; }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .animated-header { position: relative; height: 80px; width: 100%; overflow: hidden; border-radius: 12px; }
+        .animated-header .wave { position: absolute; bottom: 0; left: 0; width: 100%; height: 100px; background-size: 1000px 100px; }
+        .animated-header .wave.wave1 { animation: animate 30s linear infinite; z-index: 10; opacity: 0.7; bottom: 0px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250.4 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%234f46e5'/%3E%3C/svg%3E"); }
+        .animated-header .wave.wave2 { animation: animate2 15s linear infinite; z-index: 9; opacity: 0.5; bottom: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250.4 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%236366f1'/%3E%3C/svg%3E"); }
+        @keyframes animate { 0% { background-position-x: 0; } 100% { background-position-x: 1000px; } }
+        @keyframes animate2 { 0% { background-position-x: 0; } 100% { background-position-x: -1000px; } }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <!-- Sahifalararo o'tish animatsiyasi -->
     <div id="loader" class="loader-container">
         <div class="loader"></div>
     </div>
 
     <div id="app" class="max-w-md mx-auto h-screen flex flex-col pt-4 pb-20">
         
-        <!-- Sahifalar -->
         <main class="flex-grow overflow-y-auto px-4 space-y-4">
             
-            <!-- E'lonlar sahifasi -->
             <div id="page-listings" class="page">
                 <h1 class="text-2xl font-bold text-white mb-4 text-center">NFT Market</h1>
-                <div id="listings-container" class="grid grid-cols-2 gap-4">
-                    <!-- E'lonlar shu yerda paydo bo'ladi -->
-                </div>
+                <div id="listings-container" class="grid grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- Profil sahifasi -->
             <div id="page-profile" class="page">
                 <div class="flex flex-col items-center space-y-4 pt-8">
-                    <div class="w-28 h-28 rounded-full bg-indigo-500 flex items-center justify-center text-5xl">
-                        <span>😊</span>
-                    </div>
+                    <img id="profile-photo" src="" class="w-28 h-28 rounded-full bg-indigo-500 object-cover" alt="Profile Photo">
                     <h2 id="profile-username" class="text-2xl font-bold">@username</h2>
                     
                     <div class="w-full bg-gray-800/50 rounded-lg p-4 space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Joylagan e'lonlar</span>
-                            <span id="stat-posted" class="font-semibold text-white">0 ta</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-gray-400">Joylagan e'lonlar</span><span id="stat-posted" class="font-semibold text-white">0 ta</span></div>
                         <hr class="border-gray-700">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Taklif qilgan do'stlar</span>
-                            <span id="stat-invited" class="font-semibold text-white">0 ta</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-gray-400">Taklif qilgan do'stlar</span><span id="stat-invited" class="font-semibold text-white">0 ta</span></div>
                         <hr class="border-gray-700">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">O'chirilgan e'lonlar</span>
-                            <span id="stat-deleted" class="font-semibold text-white">0 ta</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-gray-400">O'chirilgan e'lonlar</span><span id="stat-deleted" class="font-semibold text-white">0 ta</span></div>
                         <hr class="border-gray-700">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Kiritilgan stars</span>
-                            <span id="stat-stars" class="font-semibold text-white">0</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-gray-400">Sarflangan stars</span><span id="stat-stars" class="font-semibold text-white">0</span></div>
+                        <hr class="border-gray-700">
+                        <div class="flex justify-between items-center"><span class="text-gray-400">E'lon joylash uchun</span><span id="stat-credit" class="font-semibold text-indigo-400">0 ta imkoniyat</span></div>
                     </div>
                 </div>
             </div>
             
-            <!-- E'lon berish sahifasi -->
             <div id="page-post-ad" class="page">
-                 <div class="animated-header mb-6">
-                    <div class="wave wave1"></div>
-                    <div class="wave wave2"></div>
-                </div>
+                 <div class="animated-header mb-6"><div class="wave wave1"></div><div class="wave wave2"></div></div>
                 <h2 class="text-2xl font-bold text-center mb-4">E'lon Joylash</h2>
                 <div class="space-y-4">
-                    <div>
-                        <label for="nft-link" class="block text-sm font-medium text-gray-400 mb-1">NFT gift ssilkasi</label>
-                        <input type="text" id="nft-link" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="t.me/nft/...">
-                    </div>
-                    <div>
-                        <label for="contact-username" class="block text-sm font-medium text-gray-400 mb-1">Murojaat uchun @username</label>
-                        <input type="text" id="contact-username" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="@sizning_nomingiz">
-                    </div>
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-400 mb-1">Narxi (TON)</label>
-                        <input type="number" id="price" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0.00">
-                    </div>
-                    <div class="flex space-x-2 pt-4">
-                        <button id="submit-ad-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition">
-                            E'lonni Yuborish
-                        </button>
-                         <button id="exit-ad-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">
-                            Chiqish
-                        </button>
-                    </div>
+                    <div><label for="nft-link" class="block text-sm font-medium text-gray-400 mb-1">NFT gift ssilkasi</label><input type="text" id="nft-link" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="t.me/nft/..."></div>
+                    <div><label for="contact-username" class="block text-sm font-medium text-gray-400 mb-1">Murojaat uchun @username</label><input type="text" id="contact-username" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="@sizning_nomingiz"></div>
+                    <div><label for="price" class="block text-sm font-medium text-gray-400 mb-1">Narxi (TON)</label><input type="number" id="price" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="0.00"></div>
+                    <div class="flex space-x-2 pt-4"><button id="submit-ad-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition">E'lonni Yuborish</button><button id="exit-ad-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">Chiqish</button></div>
                 </div>
             </div>
         </main>
 
-        <!-- Navigatsiya -->
         <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-gray-900/80 backdrop-blur-sm p-2">
             <div class="flex justify-around rounded-xl bg-gray-800 p-1">
-                <button data-page="listings" class="nav-btn w-full text-center py-2.5 rounded-lg font-semibold text-gray-300 active">Elonlar</button>
+                <button data-page="listings" class="nav-btn w-full text-center py-2.5 rounded-lg font-semibold text-gray-300">E'lonlar</button>
                 <button data-page="post-ad-trigger" class="nav-btn w-full text-center py-2.5 rounded-lg font-semibold text-gray-300">E'lon berish</button>
                 <button data-page="profile" class="nav-btn w-full text-center py-2.5 rounded-lg font-semibold text-gray-300">Profil</button>
             </div>
         </nav>
     </div>
 
-    <!-- Stars to'lov oynasi (modal) -->
-    <div id="payment-modal" class="modal">
-        <div class="modal-content bg-gray-900 rounded-t-2xl w-full max-w-md self-end mx-auto p-4 pb-6">
-            <div class="w-12 h-1.5 bg-gray-700 rounded-full mx-auto mb-4"></div>
-            <div class="text-center">
-                <div class="text-5xl mb-3">⭐️</div>
-                <h3 class="text-xl font-bold text-white">E'lon joylash</h3>
-                <p class="text-gray-400 mt-1">E'lon joylash uchun 5 stars to'lang</p>
-            </div>
-            <div class="my-6 p-4 bg-gray-800 rounded-lg flex justify-between items-center">
-                <span class="text-gray-300">To'lov miqdori</span>
-                <span class="font-bold text-white flex items-center">
-                    5 
-                    <svg class="w-4 h-4 ml-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                </span>
-            </div>
-            <div class="space-y-2">
-                 <button id="confirm-payment-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition">To'lash</button>
-                 <button id="cancel-payment-btn" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition">Bekor qilish</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Boshlang'ich ma'lumotlar ---
-            const state = {
-                currentPage: 'listings',
-                hasPaidCredit: false,
-                user: {
-                    username: '@TgMenejer',
-                    stats: {
-                        posted: 2,
-                        invited: 15,
-                        deleted: 1,
-                        stars: 125
-                    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const state = { currentPage: '', userProfile: null };
+        const API_BASE_URL = '/api/index.php'; 
+
+        const pages = document.querySelectorAll('.page');
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const listingsContainer = document.getElementById('listings-container');
+        const loader = document.getElementById('loader');
+
+        async function apiRequest(action, options = {}) {
+            const defaultOptions = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Telegram-Init-Data': tg.initData,
                 },
-                listings: [
-                    { id: 1, link: 't.me/nft/CloverPin-97891', price: 10.5, user: '@nft_seller' },
-                    { id: 2, link: 't.me/nft/PizzaDay-99371', price: 5.2, user: '@trader_uz' },
-                    { id: 3, link: 't.me/nft/TONWhale-85571', price: 25.0, user: '@gem_hunter' },
-                    { id: 4, link: 't.me/nft/LoveTON-84901', price: 8.8, user: '@ton_lover' },
-                    { id: 5, link: 't.me/nft/BTCBear-139361', price: 15, user: '@crypto_bro' },
-                    { id: 6, link: 't.me/nft/TONDiamond-87381', price: 50, user: '@diamond_hand' },
-                ]
             };
+            const finalOptions = { ...defaultOptions, ...options };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}?action=${action}`, finalOptions);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error("API Request Error:", error);
+                tg.showAlert(`API xatoligi: ${error.message}`);
+                return null;
+            }
+        }
+        
+        function showLoader(show) {
+            loader.style.opacity = show ? '1' : '0';
+            loader.style.pointerEvents = show ? 'auto' : 'none';
+        }
 
-            // --- Elementlarni topish ---
-            const pages = document.querySelectorAll('.page');
-            const navButtons = document.querySelectorAll('.nav-btn');
-            const listingsContainer = document.getElementById('listings-container');
-            const paymentModal = document.getElementById('payment-modal');
-            const loader = document.getElementById('loader');
+        async function showPage(pageId, isInitialLoad = false) {
+            if (state.currentPage === pageId && !isInitialLoad) return;
+            showLoader(true);
+            await new Promise(resolve => setTimeout(resolve, isInitialLoad ? 1000 : 500)); 
+            
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(`page-${pageId}`)?.classList.add('active');
 
-            // --- Funksiyalar ---
+            navButtons.forEach(btn => {
+                const isTrigger = btn.dataset.page.endsWith('-trigger');
+                const basePage = isTrigger ? btn.dataset.page.replace('-trigger', '') : btn.dataset.page;
+                const isActive = basePage === pageId || (pageId === 'post-ad' && basePage === 'post-ad');
+                btn.classList.toggle('active', isActive);
+            });
+            
+            state.currentPage = pageId;
+            showLoader(false);
+        }
 
-            // Sahifani o'zgartirish animatsiyasi
-            function showPage(pageId) {
-                if (state.currentPage === pageId) return;
-
-                loader.style.opacity = '1';
-                loader.style.display = 'flex';
+        async function renderListings() {
+            const listings = await apiRequest('get_listings');
+            if (!listings) return;
+            listingsContainer.innerHTML = '';
+             if (listings.length === 0 || listings.error) {
+                 listingsContainer.innerHTML = `<p class="text-center col-span-2 text-gray-400">${listings.error || "Hozircha e'lonlar mavjud emas."}</p>`;
+                 return;
+             }
+            listings.forEach(listing => {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-800/60 rounded-lg p-2 flex flex-col items-center justify-center space-y-2';
+                const nftContainerId = `telegram-nft-${listing.id}`;
+                card.innerHTML = `
+                    <div id="${nftContainerId}" style="width: 100%; height: 150px;"></div>
+                    <div class="text-center w-full">
+                       <p class="text-xs text-gray-400">${listing.contact_username}</p>
+                       <p class="font-bold text-sm text-indigo-400">${listing.price} TON</p>
+                    </div>`;
+                listingsContainer.appendChild(card);
                 
-                setTimeout(() => {
-                    pages.forEach(page => page.classList.remove('active'));
-                    const newPage = document.getElementById(`page-${pageId}`);
-                    if (newPage) {
-                        newPage.classList.add('active');
-                    }
-                    
-                    navButtons.forEach(btn => {
-                        btn.classList.toggle('active', btn.dataset.page === pageId);
-                         if(pageId === 'post-ad' && btn.dataset.page === 'post-ad-trigger') {
-                            btn.classList.add('active');
-                        }
-                    });
-                    
-                    state.currentPage = pageId;
-                    
-                    setTimeout(() => {
-                        loader.style.opacity = '0';
-                         setTimeout(() => {
-                             loader.style.display = 'none';
-                         }, 2000);
-                    }, 1000); // 3 sekundlik animatsiyaning bir qismi
-
-                }, 500);
-            }
-
-            // E'lonlarni render qilish
-            function renderListings() {
-                listingsContainer.innerHTML = '';
-                state.listings.forEach(listing => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-gray-800/60 rounded-lg p-2 flex flex-col items-center justify-center space-y-2';
-                    
-                    // Telegram NFT vidjetini yaratish uchun noyob ID bilan script
-                    const nftContainerId = `telegram-nft-${listing.id}-${Date.now()}`;
-                    card.innerHTML = `
-                        <div id="${nftContainerId}"></div>
-                        <div class="text-center w-full">
-                           <p class="text-xs text-gray-400">${listing.user}</p>
-                           <p class="font-bold text-sm text-indigo-400">${listing.price} TON</p>
-                        </div>
-                    `;
-                    listingsContainer.appendChild(card);
-                    
-                    const script = document.createElement('script');
-                    script.async = true;
-                    script.src = "https://telegram.org/js/telegram-widget.js?22";
-                    script.setAttribute('data-telegram-nft', listing.link.replace('t.me/nft/', ''));
-                    script.setAttribute('data-width', '100%');
-                    script.setAttribute('data-height', '150');
-                    document.getElementById(nftContainerId).appendChild(script);
-                });
-            }
-
-            // Profil ma'lumotlarini render qilish
-            function renderProfile() {
-                document.getElementById('profile-username').textContent = state.user.username;
-                document.getElementById('stat-posted').textContent = `${state.user.stats.posted} ta`;
-                document.getElementById('stat-invited').textContent = `${state.user.stats.invited} ta`;
-                document.getElementById('stat-deleted').textContent = `${state.user.stats.deleted} ta`;
-                document.getElementById('stat-stars').textContent = state.user.stats.stars;
-            }
-
-            // To'lov oynasini ko'rsatish/yashirish
-            function togglePaymentModal(show) {
-                if (show) {
-                    paymentModal.classList.add('show');
-                } else {
-                    paymentModal.classList.remove('show');
-                }
-            }
-            
-            // Yangi e'lon qo'shish
-            function addListing() {
-                const link = document.getElementById('nft-link').value.trim();
-                const username = document.getElementById('contact-username').value.trim();
-                const price = parseFloat(document.getElementById('price').value);
-
-                if (link && username && !isNaN(price) && price > 0) {
-                     const newListing = {
-                        id: Date.now(),
-                        link: link,
-                        price: price,
-                        user: username
-                    };
-                    
-                    state.listings.unshift(newListing); // Yangi e'lonni boshiga qo'shish
-                    state.user.stats.posted++;
-                    state.hasPaidCredit = false; // To'lov kreditini ishlatish
-                    
-                    renderListings();
-                    renderProfile();
-                    
-                    // Forma maydonlarini tozalash
-                    document.getElementById('nft-link').value = '';
-                    document.getElementById('contact-username').value = '';
-                    document.getElementById('price').value = '';
-                    
-                    showPage('listings');
-                } else {
-                    alert("Iltimos, barcha maydonlarni to'g'ri to'ldiring.");
-                }
-            }
-
-
-            // --- Hodisalarni bog'lash (Event Listeners) ---
-            navButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const page = button.dataset.page;
-                    if (page === 'post-ad-trigger') {
-                        if (state.hasPaidCredit) {
-                            showPage('post-ad');
-                        } else {
-                            togglePaymentModal(true);
-                        }
-                    } else if (page) {
-                        showPage(page);
-                    }
-                });
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = "https://telegram.org/js/telegram-widget.js?22";
+                script.setAttribute('data-telegram-nft', listing.nft_link.replace('t.me/nft/', ''));
+                script.setAttribute('data-width', '100%');
+                document.getElementById(nftContainerId).appendChild(script);
             });
-            
-            document.getElementById('confirm-payment-btn').addEventListener('click', () => {
-                togglePaymentModal(false);
-                state.hasPaidCredit = true;
-                state.user.stats.stars += 5;
-                renderProfile();
+        }
+
+        async function renderProfile() {
+            if (!state.userProfile) state.userProfile = await apiRequest('get_profile');
+            const profile = state.userProfile;
+            if (!profile || profile.error) return;
+
+            document.getElementById('profile-photo').src = profile.photo_url || `https://ui-avatars.com/api/?name=${profile.first_name}&background=4f46e5&color=fff`;
+            document.getElementById('profile-username').textContent = `@${profile.username}`;
+            document.getElementById('stat-posted').textContent = `${profile.posted_count} ta`;
+            document.getElementById('stat-invited').textContent = `${profile.invited_count} ta`;
+            document.getElementById('stat-deleted').textContent = `${profile.deleted_count} ta`;
+            document.getElementById('stat-stars').textContent = profile.stars_spent;
+            document.getElementById('stat-credit').textContent = `${profile.post_credit} ta imkoniyat`;
+        }
+        
+        async function handlePostAdClick() {
+            state.userProfile = await apiRequest('get_profile');
+
+            if (state.userProfile.post_credit > 0) {
                 showPage('post-ad');
-            });
-            
-            document.getElementById('cancel-payment-btn').addEventListener('click', () => {
-                togglePaymentModal(false);
-            });
-            
-            document.getElementById('submit-ad-btn').addEventListener('click', addListing);
+            } else {
+                tg.showConfirm("E'lon joylash uchun 5⭐️ to'lov qilasizmi?", async (isOk) => {
+                    if (isOk) {
+                        showLoader(true);
+                        const invoiceData = await apiRequest('create_invoice');
+                        showLoader(false);
+                        if (invoiceData && invoiceData.ok) {
+                            tg.openInvoice(invoiceData.link, async (status) => {
+                                if (status === 'paid') {
+                                    tg.showAlert("To'lov muvaffaqiyatli amalga oshirildi!");
+                                    await apiRequest('confirm_payment', { method: 'POST' });
+                                    state.userProfile = null; // force reload
+                                    await renderProfile();
+                                    showPage('post-ad');
+                                } else {
+                                    tg.showAlert("To'lov bekor qilindi yoki xatolik yuz berdi.");
+                                }
+                            });
+                        } else {
+                           tg.showAlert("To'lov oynasini ochib bo'lmadi: " + (invoiceData?.error || 'Noma\'lum xatolik'));
+                        }
+                    }
+                });
+            }
+        }
+        
+        async function submitAd() {
+            const link = document.getElementById('nft-link').value.trim();
+            const username = document.getElementById('contact-username').value.trim();
+            const price = parseFloat(document.getElementById('price').value);
 
-            document.getElementById('exit-ad-btn').addEventListener('click', () => {
-                showPage('listings'); // yoki profilga
-            });
+            if (!link.startsWith('t.me/nft/')) { tg.showAlert("Iltimos, to'g'ri NFT gift ssilkasini kiriting."); return; }
+            if (!username.startsWith('@')) { tg.showAlert("Iltimos, murojaat uchun to'g'ri @username kiriting."); return; }
+            if (isNaN(price) || price <= 0) { tg.showAlert("Iltimos, narxni to'g'ri kiriting."); return; }
 
-            // --- Boshlang'ich yuklash ---
-            renderListings();
-            renderProfile();
-            showPage('listings');
+            showLoader(true);
+            const result = await apiRequest('create_listing', {
+                method: 'POST',
+                body: JSON.stringify({ link, username, price }),
+            });
             
-            // Yuklash animatsiyasini yashirish
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                 setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 1000);
-            }, 500);
+            if (result && result.success) {
+                document.getElementById('nft-link').value = '';
+                document.getElementById('contact-username').value = '';
+                document.getElementById('price').value = '';
+                
+                state.userProfile = null;
+                await Promise.all([renderProfile(), renderListings()]);
+                tg.showAlert("E'loningiz muvaffaqiyatli joylandi!");
+                showPage('listings');
+            } else {
+                tg.showAlert("E'lonni joylashda xatolik yuz berdi: " + (result?.error || 'Noma\'lum xatolik'));
+                showLoader(false);
+            }
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const page = button.dataset.page;
+                if (page === 'post-ad-trigger') { await handlePostAdClick(); }
+                else if (page === 'listings') { await renderListings(); showPage('listings'); }
+                else if (page === 'profile') { await renderProfile(); showPage('profile'); }
+            });
         });
+        
+        document.getElementById('submit-ad-btn').addEventListener('click', submitAd);
+        document.getElementById('exit-ad-btn').addEventListener('click', () => showPage('listings'));
+
+        async function initialize() {
+            tg.ready();
+            await Promise.all([renderProfile(), renderListings()]);
+            showPage('listings', true);
+        }
+
+        initialize();
+    });
     </script>
 </body>
 </html>
-
