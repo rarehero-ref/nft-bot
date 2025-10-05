@@ -29,6 +29,10 @@
         .page { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .page.active { display: block; opacity: 1; }
         .nav-btn.active { background-color: var(--primary); color: white; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); align-items: flex-end; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
         .loader-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -71,27 +75,57 @@
                     <h2 id="profile-username" class="text-2xl font-bold">@username</h2>
                     
                     <div class="w-full bg-gray-800/50 rounded-lg p-4 space-y-3">
-                        <div class="flex justify-between items-center"><span class="text-gray-400">Joylagan e'lonlar</span><span id="stat-posted" class="font-semibold text-white">0 ta</span></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Joylagan e'lonlar</span>
+                            <span id="stat-posted" class="font-semibold text-white">0 ta</span>
+                        </div>
                         <hr class="border-gray-700">
-                        <div class="flex justify-between items-center"><span class="text-gray-400">Taklif qilgan do'stlar</span><span id="stat-invited" class="font-semibold text-white">0 ta</span></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Taklif qilgan do'stlar</span>
+                            <span id="stat-invited" class="font-semibold text-white">0 ta</span>
+                        </div>
+                         <hr class="border-gray-700">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">O'chirilgan e'lonlar</span>
+                            <span id="stat-deleted" class="font-semibold text-white">0 ta</span>
+                        </div>
                         <hr class="border-gray-700">
-                        <div class="flex justify-between items-center"><span class="text-gray-400">O'chirilgan e'lonlar</span><span id="stat-deleted" class="font-semibold text-white">0 ta</span></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Sarflangan stars</span>
+                            <span id="stat-stars" class="font-semibold text-white">0</span>
+                        </div>
                         <hr class="border-gray-700">
-                        <div class="flex justify-between items-center"><span class="text-gray-400">Sarflangan stars</span><span id="stat-stars" class="font-semibold text-white">0</span></div>
-                        <hr class="border-gray-700">
-                        <div class="flex justify-between items-center"><span class="text-gray-400">E'lon joylash uchun</span><span id="stat-credit" class="font-semibold text-indigo-400">0 ta imkoniyat</span></div>
+                         <div class="flex justify-between items-center">
+                            <span class="text-gray-400">E'lon joylash uchun</span>
+                            <span id="stat-credit" class="font-semibold text-indigo-400">0 ta imkoniyat</span>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div id="page-post-ad" class="page">
-                 <div class="animated-header mb-6"><div class="wave wave1"></div><div class="wave wave2"></div></div>
+                 <div class="animated-header mb-6">
+                    <div class="wave wave1"></div>
+                    <div class="wave wave2"></div>
+                </div>
                 <h2 class="text-2xl font-bold text-center mb-4">E'lon Joylash</h2>
                 <div class="space-y-4">
-                    <div><label for="nft-link" class="block text-sm font-medium text-gray-400 mb-1">NFT gift ssilkasi</label><input type="text" id="nft-link" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="t.me/nft/..."></div>
-                    <div><label for="contact-username" class="block text-sm font-medium text-gray-400 mb-1">Murojaat uchun @username</label><input type="text" id="contact-username" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="@sizning_nomingiz"></div>
-                    <div><label for="price" class="block text-sm font-medium text-gray-400 mb-1">Narxi (TON)</label><input type="number" id="price" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="0.00"></div>
-                    <div class="flex space-x-2 pt-4"><button id="submit-ad-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition">E'lonni Yuborish</button><button id="exit-ad-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">Chiqish</button></div>
+                    <div>
+                        <label for="nft-link" class="block text-sm font-medium text-gray-400 mb-1">NFT gift ssilkasi</label>
+                        <input type="text" id="nft-link" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="t.me/nft/...">
+                    </div>
+                    <div>
+                        <label for="contact-username" class="block text-sm font-medium text-gray-400 mb-1">Murojaat uchun @username</label>
+                        <input type="text" id="contact-username" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="@sizning_nomingiz">
+                    </div>
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-400 mb-1">Narxi (TON)</label>
+                        <input type="number" id="price" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-indigo-500" placeholder="0.00">
+                    </div>
+                    <div class="flex space-x-2 pt-4">
+                        <button id="submit-ad-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition">E'lonni Yuborish</button>
+                        <button id="exit-ad-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">Chiqish</button>
+                    </div>
                 </div>
             </div>
         </main>
@@ -108,16 +142,20 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram.WebApp;
-        tg.expand();
+        tg.expand(); // Make the web app full screen
 
+        // --- GLOBAL STATE ---
         const state = { currentPage: '', userProfile: null };
-        const API_BASE_URL = '/api/index.php'; 
+        const API_BASE_URL = '/api/index.php'; // The path to your backend file
 
+        // --- ELEMENTS ---
         const pages = document.querySelectorAll('.page');
         const navButtons = document.querySelectorAll('.nav-btn');
         const listingsContainer = document.getElementById('listings-container');
         const loader = document.getElementById('loader');
 
+        // --- API FUNCTIONS ---
+        // Function to make authenticated requests to our backend
         async function apiRequest(action, options = {}) {
             const defaultOptions = {
                 method: 'GET',
@@ -139,6 +177,7 @@
             }
         }
         
+        // --- PAGE MANAGEMENT ---
         function showLoader(show) {
             loader.style.opacity = show ? '1' : '0';
             loader.style.pointerEvents = show ? 'auto' : 'none';
@@ -146,43 +185,55 @@
 
         async function showPage(pageId, isInitialLoad = false) {
             if (state.currentPage === pageId && !isInitialLoad) return;
+            
             showLoader(true);
+            
+            // Artificial delay for smooth animation
             await new Promise(resolve => setTimeout(resolve, isInitialLoad ? 1000 : 500)); 
             
             pages.forEach(page => page.classList.remove('active'));
-            document.getElementById(`page-${pageId}`)?.classList.add('active');
+            const newPage = document.getElementById(`page-${pageId}`);
+            if (newPage) newPage.classList.add('active');
 
             navButtons.forEach(btn => {
                 const isTrigger = btn.dataset.page.endsWith('-trigger');
                 const basePage = isTrigger ? btn.dataset.page.replace('-trigger', '') : btn.dataset.page;
-                const isActive = basePage === pageId || (pageId === 'post-ad' && basePage === 'post-ad');
-                btn.classList.toggle('active', isActive);
+                btn.classList.toggle('active', basePage === pageId || (pageId === 'post-ad' && basePage === 'post-ad'));
             });
             
             state.currentPage = pageId;
             showLoader(false);
         }
 
+        // --- RENDER FUNCTIONS ---
         async function renderListings() {
             const listings = await apiRequest('get_listings');
-            if (!listings) return;
+            if (!listings || listings.error) {
+                listingsContainer.innerHTML = `<p class="text-center col-span-2">${listings?.error || "E'lonlarni yuklab bo'lmadi."}</p>`;
+                return;
+            }
+            
             listingsContainer.innerHTML = '';
-             if (listings.length === 0 || listings.error) {
-                 listingsContainer.innerHTML = `<p class="text-center col-span-2 text-gray-400">${listings.error || "Hozircha e'lonlar mavjud emas."}</p>`;
+             if (listings.length === 0) {
+                 listingsContainer.innerHTML = `<p class="text-center col-span-2 text-gray-400">Hozircha e'lonlar mavjud emas.</p>`;
                  return;
              }
+
             listings.forEach(listing => {
                 const card = document.createElement('div');
                 card.className = 'bg-gray-800/60 rounded-lg p-2 flex flex-col items-center justify-center space-y-2';
+                
                 const nftContainerId = `telegram-nft-${listing.id}`;
                 card.innerHTML = `
                     <div id="${nftContainerId}" style="width: 100%; height: 150px;"></div>
                     <div class="text-center w-full">
                        <p class="text-xs text-gray-400">${listing.contact_username}</p>
                        <p class="font-bold text-sm text-indigo-400">${listing.price} TON</p>
-                    </div>`;
+                    </div>
+                `;
                 listingsContainer.appendChild(card);
                 
+                // Use Telegram's widget script to render the NFT
                 const script = document.createElement('script');
                 script.async = true;
                 script.src = "https://telegram.org/js/telegram-widget.js?22";
@@ -193,11 +244,13 @@
         }
 
         async function renderProfile() {
-            if (!state.userProfile) state.userProfile = await apiRequest('get_profile');
+            if (!state.userProfile) {
+                state.userProfile = await apiRequest('get_profile');
+            }
             const profile = state.userProfile;
             if (!profile || profile.error) return;
 
-            document.getElementById('profile-photo').src = profile.photo_url || `https://ui-avatars.com/api/?name=${profile.first_name}&background=4f46e5&color=fff`;
+            document.getElementById('profile-photo').src = profile.photo_url || 'https://via.placeholder.com/112'; // Default image
             document.getElementById('profile-username').textContent = `@${profile.username}`;
             document.getElementById('stat-posted').textContent = `${profile.posted_count} ta`;
             document.getElementById('stat-invited').textContent = `${profile.invited_count} ta`;
@@ -206,7 +259,9 @@
             document.getElementById('stat-credit').textContent = `${profile.post_credit} ta imkoniyat`;
         }
         
+        // --- ACTION HANDLERS ---
         async function handlePostAdClick() {
+            // First, refresh profile to get latest credit count
             state.userProfile = await apiRequest('get_profile');
 
             if (state.userProfile.post_credit > 0) {
@@ -222,15 +277,15 @@
                                 if (status === 'paid') {
                                     tg.showAlert("To'lov muvaffaqiyatli amalga oshirildi!");
                                     await apiRequest('confirm_payment', { method: 'POST' });
-                                    state.userProfile = null; // force reload
-                                    await renderProfile();
+                                    state.userProfile.post_credit += 1; // Update local state
+                                    renderProfile();
                                     showPage('post-ad');
                                 } else {
                                     tg.showAlert("To'lov bekor qilindi yoki xatolik yuz berdi.");
                                 }
                             });
                         } else {
-                           tg.showAlert("To'lov oynasini ochib bo'lmadi: " + (invoiceData?.error || 'Noma\'lum xatolik'));
+                           tg.showAlert("To'lov oynasini ochib bo'lmadi. Xatolik: " + (invoiceData?.error || 'Noma\'lum xatolik'));
                         }
                     }
                 });
@@ -242,9 +297,15 @@
             const username = document.getElementById('contact-username').value.trim();
             const price = parseFloat(document.getElementById('price').value);
 
-            if (!link.startsWith('t.me/nft/')) { tg.showAlert("Iltimos, to'g'ri NFT gift ssilkasini kiriting."); return; }
-            if (!username.startsWith('@')) { tg.showAlert("Iltimos, murojaat uchun to'g'ri @username kiriting."); return; }
-            if (isNaN(price) || price <= 0) { tg.showAlert("Iltimos, narxni to'g'ri kiriting."); return; }
+            if (!link.startsWith('t.me/nft/')) {
+                tg.showAlert("Iltimos, to'g'ri NFT gift ssilkasini kiriting."); return;
+            }
+            if (!username.startsWith('@')) {
+                tg.showAlert("Iltimos, murojaat uchun to'g'ri @username kiriting."); return;
+            }
+            if (isNaN(price) || price <= 0) {
+                tg.showAlert("Iltimos, narxni to'g'ri kiriting."); return;
+            }
 
             showLoader(true);
             const result = await apiRequest('create_listing', {
@@ -253,35 +314,48 @@
             });
             
             if (result && result.success) {
+                // Clear form
                 document.getElementById('nft-link').value = '';
                 document.getElementById('contact-username').value = '';
                 document.getElementById('price').value = '';
                 
-                state.userProfile = null;
-                await Promise.all([renderProfile(), renderListings()]);
+                // Update profile and listings
+                state.userProfile = null; // force reload
+                await renderProfile();
+                await renderListings();
                 tg.showAlert("E'loningiz muvaffaqiyatli joylandi!");
                 showPage('listings');
             } else {
                 tg.showAlert("E'lonni joylashda xatolik yuz berdi: " + (result?.error || 'Noma\'lum xatolik'));
-                showLoader(false);
             }
+            showLoader(false);
         }
 
+
+        // --- EVENT LISTENERS ---
         navButtons.forEach(button => {
             button.addEventListener('click', async () => {
                 const page = button.dataset.page;
-                if (page === 'post-ad-trigger') { await handlePostAdClick(); }
-                else if (page === 'listings') { await renderListings(); showPage('listings'); }
-                else if (page === 'profile') { await renderProfile(); showPage('profile'); }
+                if (page === 'post-ad-trigger') {
+                    await handlePostAdClick();
+                } else if (page === 'listings') {
+                    await renderListings();
+                    showPage('listings');
+                } else if (page === 'profile') {
+                    await renderProfile();
+                    showPage('profile');
+                }
             });
         });
         
         document.getElementById('submit-ad-btn').addEventListener('click', submitAd);
         document.getElementById('exit-ad-btn').addEventListener('click', () => showPage('listings'));
 
+        // --- INITIALIZATION ---
         async function initialize() {
             tg.ready();
-            await Promise.all([renderProfile(), renderListings()]);
+            await renderProfile();
+            await renderListings();
             showPage('listings', true);
         }
 
